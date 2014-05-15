@@ -96,6 +96,13 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="newFile">
+            <property name="text">
+             <string>Write new file</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -115,7 +122,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>471</width>
+              <width>476</width>
               <height>521</height>
              </rect>
             </property>
@@ -1579,13 +1586,6 @@
              </item>
             </layout>
            </widget>
-           <zorder>label_56</zorder>
-           <zorder>gridLayoutWidget_29</zorder>
-           <zorder>blobCheck</zorder>
-           <zorder>gridLayoutWidget_10</zorder>
-           <zorder>verticalSpacer_6</zorder>
-           <zorder>gridLayoutWidget_31</zorder>
-           <zorder>gridLayoutWidget_9</zorder>
           </widget>
          </widget>
         </item>

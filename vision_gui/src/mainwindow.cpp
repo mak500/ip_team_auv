@@ -2,6 +2,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -29,7 +30,7 @@ MyWindow::MyWindow(QWidget *parent) :
     ui->pauseCamera->setEnabled(false);
     ui->closeCamera->setEnabled(false);
     ui->openFile->setEnabled(true);
-    ui->writeFile->setEnabled(false);
+    ui->writeFile->setEnabled(true);
     ui->closeFile->setEnabled(false);
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(on_updateImages()));
@@ -123,7 +124,6 @@ void MyWindow::on_openFile_clicked()
         {
             file.close();
             ui->openFile->setEnabled(false);
-            ui->writeFile->setEnabled(true);
             ui->closeFile->setEnabled(true);
         }
         else
@@ -199,6 +199,157 @@ void MyWindow::on_closeFile_clicked()
     ui->openFile->setEnabled(true);
     ui->writeFile->setEnabled(false);
     ui->closeFile->setEnabled(false);
+}
+
+void MyWindow::on_newFile_clicked(){
+
+    std::ofstream fout;
+    std::ofstream fout2;
+
+    fout.open("threshold.th");
+    fout2.open("params.txt");
+
+    if(fout.is_open())
+    {
+        int H_max = ui->HValue_slider->value()+ui->HThreshValue_slider->value();
+        int S_max = ui->SValue_slider->value()+ui->SThreshValue_slider->value();
+        int V_max = ui->VValue_slider->value()+ui->VThreshValue_slider->value();
+        int H_min = ui->HValue_slider->value()-ui->HThreshValue_slider->value();
+        int S_min = ui->SValue_slider->value()-ui->SThreshValue_slider->value();
+        int V_min = ui->VValue_slider->value()-ui->VThreshValue_slider->value();
+        if(H_max>255)
+        {
+            H_max=255;
+        }
+        if(H_min<0)
+        {
+            H_min=0;
+        }
+        if(S_max>255)
+        {
+            S_max=255;
+        }
+        if(S_min<0)
+        {
+            S_min=0;
+        }
+        if(V_max>255)
+        {
+            V_max=255;
+        }
+        if(V_min<0)
+        {
+            V_min=0;
+        }
+        fout<<H_min<<std::endl;
+        fout<<S_min<<std::endl;
+        fout<<V_min<<std::endl;
+        fout<<H_max<<std::endl;
+        fout<<S_max<<std::endl;
+        fout<<V_max<<std::endl;
+        fout.close();
+    }
+    else
+    {
+        QMessageBox::question(  this,
+                                tr("Error"),
+                                "Cannot open a new file. Disk full?",
+                                QMessageBox::Ok);
+        ui->openFile->setEnabled(true);
+        ui->writeFile->setEnabled(false);
+        ui->closeFile->setEnabled(false);
+        return;
+    }
+
+    if(fout2.is_open())
+    {
+        using namespace std;
+
+        fout2 << "Simple filters" << endl;
+        fout2 << "=========" << endl;
+        fout2 << "Simple blur :- " << blurVal << endl;
+        fout2 << "Median blur :- " << mblurVal << endl;
+        fout2 << "Gaussian blur :- " << gblurVal << endl << endl;
+
+        fout2 << "Dilate and Erode" << endl;
+        fout2 << "=========" << endl;
+
+        if(dilate_b)
+
+            fout2 << "Dilate with ";
+
+
+        if(erode_b)
+
+            fout2 << "Erode with ";
+
+
+        if(dilate_b || erode_b)
+        {
+            if(kernelShape == 0)
+
+                fout2 << "MORPH_ELLIPSE";
+
+            if(kernelShape == 1)
+
+                fout2 << "MORPH_RECT";
+
+            if(kernelShape == 2)
+
+                fout2 << "MORPH_CROSS";
+
+        }
+
+        fout2 << endl << endl;
+
+        fout2 << "Blob Detection" << endl;
+        fout2 << "=========" << endl;
+        fout2 << "Background color :- " << bg_r << endl;
+        fout2 << "Foreground color :- " << fg_r << endl;
+        fout2 << "Area limit :- " << filter_arg5_area;
+        fout2 << endl << endl;
+
+        fout2 << "Blob Criteria :- ";
+
+        if(filter_arg2 == B_INCLUDE)
+
+            fout2 << "INCLUDE " ;
+
+        else
+
+            fout2 << "EXCLUDE";
+
+        fout2 << " all with Area ";
+
+        if(filter_arg4 == B_LESS)
+
+            fout2 << " Less ";
+
+        else
+
+            fout2 << " Greater ";
+
+        fout2<< " than " << filter_arg5_area << endl;
+
+    }
+
+    else
+    {
+        QMessageBox::question(  this,
+                                tr("Error"),
+                                "Cannot open a new file. Disk full?",
+                                QMessageBox::Ok);
+        ui->openFile->setEnabled(true);
+        ui->writeFile->setEnabled(false);
+        ui->closeFile->setEnabled(false);
+        return;
+    }
+
+    QMessageBox::question(  this,
+                            tr("Success"),
+                            "Wrote the parameters to two files, threshold.th and params.txt.",
+                            QMessageBox::Ok);
+
 }
 
 void MyWindow::on_openCamera_clicked()
