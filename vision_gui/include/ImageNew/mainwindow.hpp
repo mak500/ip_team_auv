@@ -53,6 +53,8 @@ public Q_SLOTS:
     void on_openFile_clicked();
     void on_closeFile_clicked();
     void on_writeFile_clicked();
+    void on_newFile_clicked();
+
     void on_openCamera_clicked();
     void on_startCamera_clicked();
     void on_pauseCamera_clicked();
