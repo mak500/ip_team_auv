@@ -1,7 +1,7 @@
 Simple filters
 =========
 Simple blur :- 1
-Median blur :- 7
+Median blur :- 5
 Gaussian blur :- 1
 
 Dilate and Erode
@@ -11,6 +11,7 @@ Dilate and Erode
 Blob Detection
 =========
 Background color :- 255
-Foreground color :- 255Area limit :- 527
+Foreground color :- 255
+Area limit :- 500
 
- INCLUDE  all with Area  Less  than 527
+Blob Criteria :- INCLUDE  all with Area  Less  than 500

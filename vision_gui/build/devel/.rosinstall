@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/siddharth/ros_workspace/ImageNew/build/devel/setup.sh
