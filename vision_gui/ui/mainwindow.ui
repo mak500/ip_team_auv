@@ -45,6 +45,11 @@
               <string>1</string>
              </property>
             </item>
+            <item>
+             <property name="text">
+              <string>Open Video</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="0" column="1">

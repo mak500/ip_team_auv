@@ -1,3 +1,5 @@
+set(CMAKE_AUTOMOC ON)
+
 ##############################################################################
 # Rosbuild2
 ##############################################################################
@@ -19,7 +21,7 @@ cmake_minimum_required(VERSION 2.4.6)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/ )
 FIND_PACKAGE(Qt4 REQUIRED)
-#FIND_PACKAGE(OPENV REQUIRED)
+#find_package(Qwt REQUIRED)
 find_package( OpenCV REQUIRED )
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)

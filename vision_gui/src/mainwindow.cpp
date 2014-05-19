@@ -1,4 +1,4 @@
-#include <ImageNew/mainwindow.hpp>
+#include "mainwindow.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
@@ -13,6 +13,8 @@
 #include <blob/BlobOperators.h>
 #include <blob/ComponentLabeling.h>
 #include <blob/BlobProperties.h>
+
+QString fn_video;
 
 MyWindow::MyWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -38,6 +40,8 @@ MyWindow::MyWindow(QWidget *parent) :
     timer->start(time);
     video_being_processed = false;
     camera_opend = false;
+
+    source_from_log = false;
 
     mblurVal = 1;
     gblurVal = 1;
@@ -267,9 +271,9 @@ void MyWindow::on_newFile_clicked(){
 
         fout2 << "Simple filters" << endl;
         fout2 << "=========" << endl;
-        fout2 << "Simple blur :- " << blurVal << endl;
-        fout2 << "Median blur :- " << mblurVal << endl;
-        fout2 << "Gaussian blur :- " << gblurVal << endl << endl;
+        fout2 << "Simple blur : " << blurVal << endl;
+        fout2 << "Median blur : " << mblurVal << endl;
+        fout2 << "Gaussian blur : " << gblurVal << endl << endl;
 
         fout2 << "Dilate and Erode" << endl;
         fout2 << "=========" << endl;
@@ -278,11 +282,9 @@ void MyWindow::on_newFile_clicked(){
 
             fout2 << "Dilate with ";
 
-
         if(erode_b)
 
             fout2 << "Erode with ";
-
 
         if(dilate_b || erode_b)
         {
@@ -300,16 +302,20 @@ void MyWindow::on_newFile_clicked(){
 
         }
 
+        else
+
+            fout2 << "Dilate and erode not applied.";
+
         fout2 << endl << endl;
 
         fout2 << "Blob Detection" << endl;
         fout2 << "=========" << endl;
-        fout2 << "Background color :- " << bg_r << endl;
-        fout2 << "Foreground color :- " << fg_r << endl;
-        fout2 << "Area limit :- " << filter_arg5_area;
+        fout2 << "Background color : " << bg_r << endl;
+        fout2 << "Foreground color : " << fg_r << endl;
+        fout2 << "Area limit : " << filter_arg5_area;
         fout2 << endl << endl;
 
-        fout2 << "Blob Criteria :- ";
+        fout2 << "Blob Criteria : ";
 
         if(filter_arg2 == B_INCLUDE)
 
@@ -357,18 +363,55 @@ void MyWindow::on_openCamera_clicked()
     video_being_processed = false;
     camera_opend = false;
     std::cout<<ui->cameraNo->currentIndex()<<std::endl;
-    if(cam.open(ui->cameraNo->currentIndex()))
-    {
-        camera_opend = true;
-        ui->openCamera->setEnabled(false);
-        ui->startCamera->setEnabled(true);
-        ui->pauseCamera->setEnabled(false);
-        ui->closeCamera->setEnabled(false);
+
+    if (ui->cameraNo->currentIndex() == 2){
+        fn_video = QFileDialog::getOpenFileName(this,
+                                                tr("Open File"),
+                                                "/home/","*.avi");
+
+        std::cout <<"Opening : " << fn_video.toUtf8().constData() << std::endl;
+
+        if(cam.open(fn_video.toUtf8().constData())){
+            camera_opend = true;
+            source_from_log = true;
+            ui->openCamera->setEnabled(false);
+            ui->startCamera->setEnabled(true);
+            ui->pauseCamera->setEnabled(false);
+            ui->closeCamera->setEnabled(false);
+
+        }
+
+        else{
+
+            QMessageBox::question(  this,
+                                    tr("Error"),
+                                    "Could not open the requested video.",
+                                    QMessageBox::Ok);
+
+
+        }
     }
+
     else
-    {
-        
-    }
+
+        if(cam.open(ui->cameraNo->currentIndex()))
+        {
+            camera_opend = true;
+            ui->openCamera->setEnabled(false);
+            ui->startCamera->setEnabled(true);
+            ui->pauseCamera->setEnabled(false);
+            ui->closeCamera->setEnabled(false);
+        }
+        else
+        {
+
+            QMessageBox::question(  this,
+                                    tr("Error"),
+                                    "Could not open the camera.",
+                                    QMessageBox::Ok);
+
+
+        }
 }
 
 void MyWindow::on_startCamera_clicked()
@@ -671,7 +714,29 @@ void MyWindow::on_updateImages()
 {
     if(video_being_processed)
     {
-        cam>>camImage;
+        cam >> camImage;
+
+        if(camImage.empty() && source_from_log){
+            std::cout << "Entered the empty image branch!";
+
+            cam.release();
+
+            if(cam.open(fn_video.toUtf8().constData()))
+                cam >> camImage;
+
+            else
+            {
+                video_being_processed = false;
+                camera_opend = false;
+                cam.release();
+                ui->openCamera->setEnabled(true);
+                ui->startCamera->setEnabled(false);
+                ui->pauseCamera->setEnabled(false);
+                ui->closeCamera->setEnabled(false);
+            }
+
+        }
+
         cv::resize(camImage,colorImage,cv::Size(320,240));
         cv::cvtColor(colorImage,thImage,CV_RGB2HSV_FULL);
 
@@ -769,7 +834,8 @@ void MyWindow::on_updateImages()
             vector<float>radius( contours.size() );
 
             for( int i = 0; i < contours.size(); i++ )
-            { approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
+            {
+                approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
                 boundRect[i] = boundingRect( Mat(contours_poly[i]) );
                 minEnclosingCircle( (Mat)contours_poly[i], center[i], radius[i] );
             }
