@@ -10,7 +10,7 @@ Managed by : Madhukar
 Overall Architecture
 ----
 
-With the use of actionlib, we are looking to optimize the whole process. When the task/mission planner, which is always running, throughout
+With the use of actionlib, we hope to optimize the whole communication protocol between the main task planner and the vision module. When the task/mission planner, which is always running, throughout
 the mission, invokes one of the tasks of the Vision stack, then, this is fixed up in such a way that, the IP code is present in an Action Server,
 and the Task Planner acts as the Action Client. The client sends a goal to the server, and the server starts executing the goal. Throughout the
 execution of the goal, the server sends feedback to the client. And at the successful completion of the goal or at the end of the timeout, set by
