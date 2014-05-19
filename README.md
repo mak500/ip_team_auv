@@ -4,6 +4,7 @@ AUV Vision Stack
 This is the repository that contains the vision stack of AUV IIT Kharagpur.
 
 Vehicle Name : Kraken
+
 Managed by : Madhukar
 
 Overall Architecture
@@ -20,7 +21,7 @@ Folders
 
 ###actionmsg/###
 
-# TO DO
+  TO DO
 
 ###blob/###
 
@@ -49,8 +50,8 @@ Misc Compressed packages.
 This folder houses code for the marker detection part. In this part of a task, we detect a marker and then send feedback to the task planner as to the status of completion and alignment changes that need to be made, in order to match the heading of the vehicle with the alignment of the marker, placed on the floor of the tank.
 
 ###taskheader/###
-
-# TO DO
+  
+  TO DO
 
 ###validationgate/###
 
