@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/actionmsg</url>
   <depend package="actionlib"/>
   <depend package="actionlib_msgs"/>
+  <depend package="std_msgs"/>
 
 </package>
 

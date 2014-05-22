@@ -3,7 +3,6 @@
 
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
-#include <cv_bridge/CvBridge.h>
 #include <cv_bridge/cv_bridge.h>
 #include <actionmsg/markerAction.h>
 #include <actionlib/server/simple_action_server.h>

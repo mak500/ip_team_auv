@@ -43,7 +43,7 @@ CMAKE_BINARY_DIR = /home/madhukar/ros_workspace/ip_team_auv/taskheader/build
 include CMakeFiles/test-results.dir/progress.make
 
 CMakeFiles/test-results:
-	/opt/ros/fuerte/share/rosunit/bin/summarize_results.py --nodeps taskheader
+	/opt/ros/hydro/share/rosunit/cmake/../scripts/summarize_results.py --nodeps taskheader
 
 test-results: CMakeFiles/test-results
 test-results: CMakeFiles/test-results.dir/build.make

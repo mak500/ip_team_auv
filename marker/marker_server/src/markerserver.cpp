@@ -34,7 +34,7 @@ void Marker::imageCallBack(const sensor_msgs::ImageConstPtr &_msg)
     {
         _imagePtr = cv_bridge::toCvCopy(_msg, "bgr8");
     }
-    catch (sensor_msgs::CvBridgeException& e)
+    catch (cv_bridge::Exception& e)
     {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", _msg->encoding.c_str());
     }
